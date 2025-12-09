@@ -1,19 +1,20 @@
 import express from 'express';
-import cuisineRoutes from './routes/cuisineRoutes.js';
-import recipeRoutes from './routes/recipeRoutes.js';
+import authRoutes from './routes/authRoutes.js';
+import { errorHandler } from './middleware/errorHandler.js';
 
 const app = express();
 
 app.use(express.json());
 
-// Health check endpoint for deployment
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'Server is running' });
 });
 
 
-//Breyta
-//app.use('/api/cuisines', cuisineRoutes);
-//app.use('/api/recipes', recipeRoutes);
+app.use('/api/auth', authRoutes);
+
+
+
+app.use(errorHandler); 
 
 export default app;

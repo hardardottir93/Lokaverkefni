@@ -27,7 +27,7 @@ export const findUserById = async (id: number): Promise<User | null> => {
 
 export const createUser = async (user: CreateUser): Promise<User> => {
   return await db.one(
-    'INSERT INTO users (name, email, password_hash) VALUES($1, $2, $3) RETURNING id, name, email, created_at, updated_at',
+    'INSERT INTO users (name, email, password_hash) VALUES($1, $2, $3) RETURNING name, id, email, created_at, updated_at',
     [user.name, user.email, user.password_hash]
   );
 };

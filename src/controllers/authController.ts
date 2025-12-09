@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { createUser, CreateUser, findUserByEmail, UserTokenPayload } from '../models/userModel';
 import bcrypt  from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { JWT_SECRET } from '../server';
+import { JWT_SECRET } from '../config/env';
 
 const SALT_ROUNDS = 12;
 
@@ -59,12 +59,14 @@ export const loginController = async (request: Request, response: Response, next
         message: "Rangt netfang eða lykilorð." 
     };
 
-    if (await bcrypt.compare(password, user.password_hash)) {
+    const validPassword = await bcrypt.compare(password, user.password_hash);
+
+    if (!validPassword) {
         return next({
             status: 401,
             message: "Rangt netfang eða lykilorð."
-        });
-    }
+    });
+}
 
     const payload: UserTokenPayload = {
         sub: user.id,

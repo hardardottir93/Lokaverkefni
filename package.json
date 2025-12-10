@@ -6,7 +6,7 @@
   "scripts": {
     "test": "vitest",
     "test:watch": "vitest --watch",
-    "dev": "nodemon --exec tsx src/server.ts",
+    "dev": "nodemon --exec tsx src/utils/server.ts",
     "build": "tsc",
     "start": "node dist/server.js"
   },

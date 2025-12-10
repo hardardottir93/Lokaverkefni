@@ -55,8 +55,8 @@ export const loginController = async (request: Request, response: Response, next
 
     const user = await findUserByEmail(email);
     if (!user) throw { 
-        status: 401, 
-        message: "Rangt netfang eða lykilorð." 
+        status: 400, 
+        message: "Notandi er ekki til" 
     };
 
     const validPassword = await bcrypt.compare(password, user.password_hash);

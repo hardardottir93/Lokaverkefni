@@ -10,3 +10,18 @@ export const validate = (schema: ZodSchema) =>
       next(err);
     }
   };
+
+
+export const validateQuery = (schema: ZodSchema) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const parsedQuery = schema.parse(req.query);
+
+      res.locals.query = parsedQuery;
+
+      next();
+    } catch (error) {
+      next(error);
+    }
+  };
+};

@@ -1,7 +1,110 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from 'vitest';
+import request from 'supertest';
+import app from '../src/utils/app';
 
-describe("placeholder", () => {
-  it("passes", () => {
-    expect(true).toBe(true);
+
+describe('GET /events', () => {
+  it('should return a list of events', async () => {
+    const res = await request(app).get('/events');
+
+    expect(res.status).toBe(200);
+    expect(Array.isArray(res.body.events)).toBe(true);
+    expect(res.body).toHaveProperty('count');
   });
+});
+
+
+describe('GET /events/search', () => {
+  it('should filter events by categoryId', async () => {
+    const res = await request(app).get('/events/search?categoryId=1');
+
+    expect(res.status).toBe(200);
+    expect(Array.isArray(res.body.events)).toBe(true);
+
+    for (const event of res.body.events) {
+      expect(event.category).toBeDefined();
+    }
+  });
+
+  it('should filter events by date range', async () => {
+    const res = await request(app).get(
+      '/events/search?fromDate=2025-06-01&toDate=2025-06-30'
+    );
+
+    expect(res.status).toBe(200);
+    expect(Array.isArray(res.body.events)).toBe(true);
+  });
+
+
+  it('should fail on invalid query params', async () => {
+    const res = await request(app).get('/events/search?categoryIdÖ2');
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBeDefined();
+  });
+
+  it('should return empty list if no events match filters', async () => {
+    const res = await request(app).get(
+      '/events/search?fromDate=2099-01-01&toDate=2099-12-31'
+    );
+
+    expect(res.status).toBe(200);
+    expect(res.body.count).toBe(0);
+    expect(res.body.events).toEqual([]);
+  });
+
+    it('filters by venue name', async () => {
+    const res = await request(app)
+      .get('/events/search')
+      .query({ venueName: 'Laugardalshöll' });
+
+    expect(res.status).toBe(200);
+    expect(Array.isArray(res.body.events)).toBe(true);
+
+    for (const event of res.body.events) {
+      expect(event.venue_name).toBeTruthy();
+      expect(event.venue_name).toContain('Laugardal');
+    }
+  });
+
+  it('filters by city', async () => {
+    const res = await request(app)
+      .get('/events/search')
+      .query({ city: 'Reykjavík' });
+
+    expect(res.status).toBe(200);
+
+    for (const event of res.body.events) {
+      expect(event.city).toBe('Reykjavík');
+    }
+  });
+
+  it('filters by venue and city together', async () => {
+    const res = await request(app)
+      .get('/events/search')
+      .query({
+        venueName: 'Laugardalshöll',
+        city: 'Reykjavík',
+      });
+
+    expect(res.status).toBe(200);
+  });
+
+  it('returns empty list if no events match', async () => {
+    const res = await request(app)
+      .get('/events/search')
+      .query({ venueName: 'EkkiTil' });
+
+    expect(res.status).toBe(200);
+    expect(res.body.count).toBe(0);
+    expect(res.body.events).toEqual([]);
+  });
+
+  it('fails on invalid query params (Zod strict)', async () => {
+    const res = await request(app)
+      .get('/events/search?venueNameÖVilla');
+
+    expect(res.status).toBe(400);
+  });
+
 });

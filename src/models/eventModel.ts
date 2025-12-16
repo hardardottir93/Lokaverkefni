@@ -1,6 +1,4 @@
 import db from '../config/db';
-import pool from '../config/db';
-import { QueryResult } from 'pg';
 
 export interface Event {
   id: number;
@@ -18,7 +16,7 @@ export interface EventFilter {
   toDate?: string;
   venueId?: number; 
   venueName?: string;
-  cityName?: string;
+  city?: string;
 }
 
 export interface EventWithVenue {
@@ -54,8 +52,19 @@ export const getEventsByFilter = async (
       ON e.venue_id = v.id
   `;
 
+  if (filters.city?.trim()) {
+    conditions.push(
+      `TRIM(SPLIT_PART(v.address, ',', 2)) ILIKE $${index++}`
+    );
+    values.push(`%${filters.city.trim()}%`);
+  }
+
   if (filters.venueName?.trim()) {
-    joinClause += ` AND v.name ILIKE $${index++}`;
+    joinClause = `
+      INNER JOIN venues v
+        ON e.venue_id = v.id
+      AND v.name ILIKE $${index++}
+    `;
     values.push(`%${filters.venueName.trim()}%`);
   }
 

@@ -6,6 +6,7 @@ export const EventFilterQuery = z
     categoryId: z.coerce.number().optional(),
     venueId: z.coerce.number().optional(),
     venueName: z.string().optional(),
+    city: z.string().optional(),   
 
     fromDate: z
       .string()

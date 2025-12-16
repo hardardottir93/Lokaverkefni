@@ -112,7 +112,7 @@ describe("POST /auth/login", () => {
   });
 
 
-  it("ætti að skila token þegar email og password eru rétt", async () => {
+  it("should return a token when user and password are correct", async () => {
     const response = await request(app)
       .post("/auth/login")
       .send(testUser)
@@ -122,7 +122,7 @@ describe("POST /auth/login", () => {
     expect(typeof response.body.token).toBe("string");
   });
 
-  it("á að skila 400 ef email er ekki til", async () => {
+  it("should return error 400 if the email does not exist", async () => {
     const response = await request(app)
       .post("/auth/login")
       .send({
@@ -134,7 +134,7 @@ describe("POST /auth/login", () => {
     expect(response.body.error).toBeDefined();
   });
 
-  it("á að skila 401 ef password er rangt", async () => {
+  it("should return error 401 if the password is wrong", async () => {
     const response = await request(app)
       .post("/auth/login")
       .send({
@@ -146,15 +146,15 @@ describe("POST /auth/login", () => {
     expect(response.body.error).toBeDefined();
   });
 
-  it("á að skila 400 ef vantar email eða password", async () => {
+  it("should return error 400 if the email or password is missing", async () => {
     await request(app)
       .post("/auth/login")
-      .send({ email: testUser.email }) // enginn password
+      .send({ email: testUser.email }) 
       .expect(400);
 
     await request(app)
       .post("/auth/login")
-      .send({ password: testUser.password }) // ekkert email
+      .send({ password: testUser.password }) 
       .expect(400);
   });
 });

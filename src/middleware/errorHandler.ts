@@ -11,21 +11,13 @@ export const errorHandler = (
 
    if (response.headersSent) return next(error);
   // Handle Zod validation errors
+  
   if (error instanceof z.ZodError) {
-    const details = error.issues.map((issue) => ({
-      field: issue.path.join('.'),
-      message: issue.message,
-    }));
-
-    return response.status(400).json({
-      error: {
-        status: 400,
-        message: "Validation failed",
-        details,
-      },
-    });
-  }
-
+  return response.status(400).json({
+    success: false,
+    error: error.issues[0].message,
+  });
+}
   // Handle regular errors
   const status = error.status || 500;
   const message = error.message || 'Server Error';

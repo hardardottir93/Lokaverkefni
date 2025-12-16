@@ -36,3 +36,16 @@ export const EventFilterQuery = z
     }
   )
 .strict();
+
+
+export const EventIdParams = z.object({
+  id: z
+    .string()
+    .refine((val) => {
+      const num = Number(val);
+      return Number.isInteger(num) && num > 0;
+    }, {
+      message: 'Id er ekki gilt',
+    })
+    .transform((val) => Number(val)),
+});

@@ -2,13 +2,13 @@ import { Request, Response, NextFunction } from "express";
 import { findEventById, getAllEvents, getEventsByFilter } from "../models/eventModel";
 
 export const getEventByIdController = async (request: Request, response: Response, next: NextFunction) => {
-    
-   const { id } = request.params;
+   const { id } = response.locals.params;
 
-   const event = await findEventById(Number(id));
+   const event = await findEventById(id);
 
    if (!event) {
     return response.status(404).json({
+        success: false,
         error: "Viðburður fannst ekki"
     });
    }

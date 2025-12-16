@@ -25,3 +25,16 @@ export const validateQuery = (schema: ZodSchema) => {
     }
   };
 };
+
+
+export const validateParams = (schema: ZodSchema) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const parsedParams = schema.parse(req.params);
+      res.locals.params = parsedParams; 
+      next();
+    } catch (error) {
+      next(error);
+    }
+  };
+};

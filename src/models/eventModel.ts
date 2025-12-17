@@ -31,8 +31,26 @@ export interface EventWithVenue {
   city: string | null;
 }
 
-export const findEventById = async (id: number): Promise<Event | null> => {
-  return await db.oneOrNone('SELECT * FROM events WHERE id = $1', [id]);
+export const findEventById = async (id: number) => {
+  const query = `
+    SELECT
+      e.id,
+      e.name,
+      e.description,
+      e.event_date,
+      e.created_at,
+
+      c.name AS category,
+      v.name AS venue_name,
+      TRIM(SPLIT_PART(v.address, ',', 2)) AS city
+
+    FROM events e
+    LEFT JOIN categories c ON e.category_id = c.id
+    LEFT JOIN venues v ON e.venue_id = v.id
+    WHERE e.id = $1
+  `;
+
+  return db.oneOrNone(query, [id]);
 };
 
 export const getAllEvents = async (): Promise<Event[] | null> => {

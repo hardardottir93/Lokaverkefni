@@ -108,3 +108,38 @@ describe('GET /events/search', () => {
   });
 
 });
+
+
+describe('GET /events/:id', () => {
+
+  it('should return event details for valid id', async () => {
+    const res = await request(app).get('/events/2');
+
+    expect(res.status).toBe(200);
+
+    expect(res.body).toHaveProperty('id');
+    expect(res.body).toHaveProperty('name');
+    expect(res.body).toHaveProperty('description');
+    expect(res.body).toHaveProperty('event_date');
+
+    expect(res.body).toHaveProperty('category');
+    expect(res.body).toHaveProperty('venue_name');
+    expect(res.body).toHaveProperty('city');
+  });
+
+  it('should return 404 if event does not exist', async () => {
+    const res = await request(app).get('/events/999999');
+
+    expect(res.status).toBe(404);
+    expect(res.body).toHaveProperty('error');
+  });
+
+  it('should return 400 for invalid event id', async () => {
+    const res = await request(app).get('/events/abc');
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe('Id er ekki gilt');
+  });
+
+});
+

@@ -54,10 +54,12 @@ export const loginController = async (request: Request, response: Response, next
     }
 
     const user = await findUserByEmail(email);
-    if (!user) throw { 
-        status: 400, 
+
+    if (!user) 
+        return next({ 
+        status: 401, 
         message: "Notandi er ekki til" 
-    };
+    });
 
     const validPassword = await bcrypt.compare(password, user.password_hash);
 
@@ -65,11 +67,12 @@ export const loginController = async (request: Request, response: Response, next
         return next({
             status: 401,
             message: "Rangt netfang eða lykilorð."
-    });
-}
+        });
+    }
 
     const payload: UserTokenPayload = {
-        sub: user.id,
+        id: user.id,
+        email: user.email,
     };
 
     const token = jwt.sign(payload, JWT_SECRET, {

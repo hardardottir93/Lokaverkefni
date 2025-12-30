@@ -3,6 +3,7 @@ import authRoutes from '../routes/authRoutes.js';
 import { errorHandler } from '../middleware/errorHandler.js';
 import eventRoutes from '../routes/eventRoutes.js';
 import venueRoutes from '../routes/venueRoutes.js';
+import bookingRoutes from '../routes/bookingRoutes.js';
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.get('/health', (req, res) => {
 app.use('/auth', authRoutes);
 app.use('/events', eventRoutes);
 app.use('/venues', venueRoutes);
+app.use('/bookings', bookingRoutes);
 
 
 

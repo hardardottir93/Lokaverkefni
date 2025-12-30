@@ -2,14 +2,14 @@ import { describe, it, expect } from 'vitest';
 import request from 'supertest';
 import app from '../src/utils/app';
 
-describe('UC3 – GET /venues/:id', () => {
+describe('GET /venues/:id', () => {
 
   it('should return venue details with upcoming events', async () => {
     const res = await request(app).get('/venues/1');
 
     expect(res.status).toBe(200);
 
-    // venue upplýsingar
+    
     expect(res.body).toHaveProperty('id');
     expect(res.body).toHaveProperty('name');
     expect(res.body).toHaveProperty('address');
@@ -19,7 +19,7 @@ describe('UC3 – GET /venues/:id', () => {
     expect(res.body).toHaveProperty('events');
     expect(Array.isArray(res.body.events)).toBe(true);
 
-    // ef events eru til (vegna future seed)
+    // if events exist
     if (res.body.events.length > 0) {
       const event = res.body.events[0];
       expect(event).toHaveProperty('id');

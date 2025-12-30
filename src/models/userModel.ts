@@ -10,7 +10,8 @@ export interface User {
 }
 
 export type UserTokenPayload = {
-  sub: number;
+  id: number;
+  email: string;
 };
 
 export type CreateUser = Pick<User, 'name' |'email' | 'password_hash'>;

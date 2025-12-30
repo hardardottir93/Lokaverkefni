@@ -5,7 +5,6 @@ dotenv.config();
 
 const pgp = pgPromise({});
 
-// Support both DATABASE_URL (production) and individual env vars (local dev)
 const db = process.env.DATABASE_URL
   ? pgp(process.env.DATABASE_URL)
   : pgp({

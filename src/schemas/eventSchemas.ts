@@ -6,7 +6,7 @@ export const EventFilterQuery = z
     categoryId: z.coerce.number().optional(),
     venueId: z.coerce.number().optional(),
     venueName: z.string().optional(),
-    city: z.string().optional(),   
+    address: z.string().optional(),   
 
     fromDate: z
       .string()
@@ -31,7 +31,7 @@ export const EventFilterQuery = z
       !data.toDate ||
       new Date(data.fromDate) <= new Date(data.toDate),
     {
-      message: 'fromDate must be before toDate',
+      message: 'fromDate þarf að vera á undan toDate',
       path: ['fromDate'],
     }
   )

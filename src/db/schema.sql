@@ -1,7 +1,6 @@
 -- *******************************************
 -- USERS
 -- *******************************************
-
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
@@ -35,43 +34,29 @@ CREATE TABLE venues (
 CREATE TABLE events (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
-    description TEXT,
     event_date TIMESTAMPTZ NOT NULL,
+    available_tickets INTEGER NOT NULL CHECK (available_tickets >= 0),
+    ticket_cost INTEGER NOT NULL CHECK (ticket_cost > 0),
     venue_id INTEGER NOT NULL REFERENCES venues(id) ON DELETE CASCADE,
-    category_id INTEGER NOT NULL REFERENCES categories(id) ON DELETE SET NULL,
+    category_id INTEGER REFERENCES categories(id) ON DELETE SET NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
--- *******************************************
--- TICKETS
--- *******************************************
-CREATE TABLE tickets (
-    id SERIAL PRIMARY KEY,
-    event_id INTEGER NOT NULL REFERENCES events(id) ON DELETE CASCADE,
-    price NUMERIC(10, 2) NOT NULL CHECK (price >= 0),
-    total_quantity INTEGER NOT NULL CHECK (total_quantity >= 0),
-    remaining_quantity INTEGER NOT NULL CHECK (remaining_quantity >= 0),
-    ticket_type TEXT NOT NULL DEFAULT 'general'
 );
 
 -- *******************************************
 -- BOOKINGS
 -- *******************************************
+CREATE TYPE payment_method_enum AS ENUM (
+  'CARD',
+  'PAYPAL',
+  'APPLE_PAY'
+);
+
 CREATE TABLE bookings (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     event_id INTEGER NOT NULL REFERENCES events(id) ON DELETE CASCADE,
-    total_price NUMERIC(10, 2) NOT NULL CHECK (total_price >= 0),
-    status TEXT NOT NULL DEFAULT 'CONFIRMED',
+    quantity INTEGER NOT NULL CHECK (quantity > 0),
+    total_price INTEGER NOT NULL CHECK (total_price >= 0),
+    payment_method payment_method_enum NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
--- *******************************************
--- BOOKING_TICKETS
--- *******************************************
-CREATE TABLE booking_tickets (
-    id SERIAL PRIMARY KEY,
-    booking_id INTEGER NOT NULL REFERENCES bookings(id) ON DELETE CASCADE,
-    ticket_id INTEGER NOT NULL REFERENCES tickets(id) ON DELETE CASCADE,
-    quantity INTEGER NOT NULL CHECK (quantity > 0)
 );

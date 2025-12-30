@@ -6,8 +6,8 @@ import { EventFilterQuery, EventIdParams } from "../schemas/eventSchemas";
 const router = express.Router();
 
 router.get("/", getAllEventsController);
-
 router.get("/search", validateQuery(EventFilterQuery),getEventsByFilterController);
 router.get("/:id", validateParams(EventIdParams), getEventByIdController);
+
 
 export default router;

@@ -9,28 +9,25 @@ export interface Venue {
 }
 
 export const getAllVenues = async () => {
-  return db.any(`
-    SELECT *
+  return db.any(
+    `SELECT *
     FROM venues
-    ORDER BY name ASC
-  `);
+    ORDER BY name ASC`
+  );
 };
 
 export const findVenueById = async (id: number) => {
   return db.oneOrNone(
-    `
-    SELECT *
+    `SELECT *
     FROM venues
-    WHERE id = $1
-    `,
+    WHERE id = $1`,
     [id]
   );
 };
 
 export const getUpcomingEventsByVenueId = async (venueId: number) => {
   return db.any(
-    `
-    SELECT
+    `SELECT
       e.id,
       e.name,
       e.event_date,
@@ -39,8 +36,7 @@ export const getUpcomingEventsByVenueId = async (venueId: number) => {
     LEFT JOIN categories c ON e.category_id = c.id
     WHERE e.venue_id = $1
       AND e.event_date >= NOW()
-    ORDER BY e.event_date ASC
-    `,
+    ORDER BY e.event_date ASC`,
     [venueId]
   );
 };

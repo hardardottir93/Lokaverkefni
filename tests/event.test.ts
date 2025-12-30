@@ -67,24 +67,24 @@ describe('GET /events/search', () => {
     }
   });
 
-  it('filters by city', async () => {
+  it('filters by address', async () => {
     const res = await request(app)
       .get('/events/search')
-      .query({ city: 'Reykjavík' });
+      .query({ address: 'Reykjavík' });
 
     expect(res.status).toBe(200);
 
     for (const event of res.body.events) {
-      expect(event.city).toBe('Reykjavík');
+      expect(event.address).toBe('Reykjavík');
     }
   });
 
-  it('filters by venue and city together', async () => {
+  it('filters by venue and address together', async () => {
     const res = await request(app)
       .get('/events/search')
       .query({
         venueName: 'Laugardalshöll',
-        city: 'Reykjavík',
+        address: 'Reykjavík',
       });
 
     expect(res.status).toBe(200);
@@ -119,12 +119,11 @@ describe('GET /events/:id', () => {
 
     expect(res.body).toHaveProperty('id');
     expect(res.body).toHaveProperty('name');
-    expect(res.body).toHaveProperty('description');
     expect(res.body).toHaveProperty('event_date');
 
     expect(res.body).toHaveProperty('category');
     expect(res.body).toHaveProperty('venue_name');
-    expect(res.body).toHaveProperty('city');
+    expect(res.body).toHaveProperty('address');
   });
 
   it('should return 404 if event does not exist', async () => {
@@ -142,4 +141,3 @@ describe('GET /events/:id', () => {
   });
 
 });
-

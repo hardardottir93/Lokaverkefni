@@ -4,7 +4,9 @@ dotenv.config();
 const jwtSecret = process.env.JWT_SECRET;
 
 if (!jwtSecret) {
-  throw new Error("Missing JWT_SECRET in environment");
+ const err: any = new Error('Missing JWT_SECRET in environment');
+  err.status = 404;
+  throw err;
 }
 
 export const JWT_SECRET: string = jwtSecret;

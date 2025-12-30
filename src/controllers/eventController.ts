@@ -1,51 +1,47 @@
 import { Request, Response, NextFunction } from "express";
 import { findEventById, getAllEvents, getEventsByFilter } from "../models/eventModel";
 
-export const getEventByIdController = async (request: Request, response: Response, next: NextFunction) => {
+export const getEventByIdController = async (request: Request, response: Response) => {
    const { id } = response.locals.params;
 
    const event = await findEventById(id);
 
-   if (!event) {
-    return response.status(404).json({
-        success: false,
-        error: "Viðburður fannst ekki"
-    });
-   }
+    if (!event) {
+        return response.status(404).json({
+            success: false,
+            error: "Viðburður fannst ekki"
+        });
+    }
 
    return response.status(200).json(event); 
 };
 
 
-export const getAllEventsController = async (request: Request, response: Response, next: NextFunction) => {
+export const getAllEventsController = async (request: Request, response: Response) => {
     
-   const events = (await getAllEvents()) ?? [];
+    const events = (await getAllEvents()) ?? [];
 
-   if(events.length === 0) {
+    if(events.length === 0) {
+        return response.status(200).json({
+            message: "Engir viðburðir fundust",
+            events: []
+        });
+    }
+
     return response.status(200).json({
-        message: "Engir viðburðir fundust",
-        events: []
+        count: events.length,
+        events
     });
-   }
-
-   return response.status(200).json({
-    count: events.length,
-    events
-   })
-
 };
 
 
-export const getEventsByFilterController = async (request: Request, response: Response, next: NextFunction) => {
+export const getEventsByFilterController = async (request: Request, response: Response) => {
 
-    const filters = response.locals.query ?? {};
+    const filters = response.locals.query;
+    const events  = await getEventsByFilter(filters);
 
-    getEventsByFilter(filters)
-        .then(events => {
-        response.status(200).json({
-            count: events.length,
-            events,
-        });
-        })
-        .catch(next);
+    return response.status(200).json({
+        count: events.length,
+        events,
+    });
 };

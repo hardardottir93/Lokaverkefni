@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcrypt";
-import { findUserByEmail, findUserById, updateUserById} from "../models/userModel";
+import { deleteUserById, findUserByEmail, findUserById, updateUserById} from "../models/userModel.js";
 
 const SALT_ROUNDS = 12;
 
@@ -46,4 +46,21 @@ export const updateUserController = async (request: Request, response: Response,
         success: true,
         user: updated,
     });
+};
+
+
+export const deleteUserController = async (request: Request, response: Response, next: NextFunction
+) => {
+  const userId = response.locals.user.id as number;
+
+  const rowCount = await deleteUserById(userId);
+
+  if (rowCount === 0) {
+    return next({ status: 404, message: "Notandi fannst ekki" });
+  }
+
+  return response.status(200).json({
+    success: true,
+    message: "Aðgangi eytt",
+  });
 };

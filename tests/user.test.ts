@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import request from "supertest";
 import bcrypt from "bcrypt";
-import app from "../src/utils/app";
-import db from "../src/config/db";
+import app from "../src/utils/app.js";
+import db from "../src/config/db.js";
 
 let mockUserId = 1;
 
@@ -92,4 +92,85 @@ describe("PATCH /user/update", () => {
         expect(res.status).toBe(400);
         expect(res.body.success).toBe(false);
     });
+});
+
+
+describe("DELETE /user/delete ", () => {
+  beforeEach(async () => {
+    await db.none(`
+      TRUNCATE TABLE
+        bookings,
+        events,
+        venues,
+        categories,
+        users
+      RESTART IDENTITY CASCADE
+    `);
+
+    const u = await insertUser("Delete Me", "deleteme@example.com", "secret123");
+    mockUserId = u.id;
+
+    const venue = await db.one(
+      `INSERT INTO venues (name, address, capacity)
+       VALUES ($1, $2, $3)
+       RETURNING id`,
+      ["Test Venue", "Test Address", 100]
+    );
+
+    const category = await db.one(
+      `INSERT INTO categories (name)
+       VALUES ($1)
+       RETURNING id`,
+      ["Music"]
+    );
+
+    const event = await db.one(
+      `INSERT INTO events (name, event_date, available_tickets, ticket_cost, venue_id, category_id)
+       VALUES ($1, NOW() + INTERVAL '10 days', $2, $3, $4, $5)
+       RETURNING id, ticket_cost`,
+      ["Test Event", 50, 5000, venue.id, category.id]
+    );
+
+    // Búa til bókun
+    await db.one(
+      `INSERT INTO bookings (user_id, event_id, quantity, total_price, payment_method)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING id`,
+      [mockUserId, event.id, 2, 2 * event.ticket_cost, "CARD"]
+    );
+  });
+
+  it("should delete user and cascade delete bookings", async () => {
+    // Staðfesta að bókun er til staðar
+    const beforeCount = await db.one(
+      `SELECT COUNT(*)::int AS count FROM bookings WHERE user_id = $1`,
+      [mockUserId]
+    );
+    expect(beforeCount.count).toBe(1);
+
+    const res = await request(app).delete("/user/delete");
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+
+    // Athuga hvort user sé til
+    const user = await db.oneOrNone("SELECT id FROM users WHERE id = $1", [mockUserId]);
+    expect(user).toBeNull();
+
+    // Athuga hvort bókanir séu til
+    const afterCount = await db.one(
+      `SELECT COUNT(*)::int AS count FROM bookings WHERE user_id = $1`,
+      [mockUserId]
+    );
+    expect(afterCount.count).toBe(0);
+  });
+
+  it("should return 404 if user does not exist", async () => {
+    mockUserId = 999999;
+
+    const res = await request(app).delete("/user/delete");
+
+    expect(res.status).toBe(404);
+    expect(res.body.success).toBe(false);
+  });
 });

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import request from 'supertest';
-import app from '../src/utils/app';
-import db from '../src/config/db';
+import app from '../src/utils/app.js';
+import db from '../src/config/db.js';
 
 describe('POST /auth/signup', () => {
   it('should create a user successfully', async () => {

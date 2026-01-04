@@ -1,14 +1,13 @@
 {
   "name": "Lokaverkefni",
   "version": "1.0.0",
-  "description": "Verkefni í að byggja REST API með Express og tengja það við PostgreSQL gagnagrunn með pg-promise.",
   "main": "index.js",
   "scripts": {
     "test": "vitest",
     "test:watch": "vitest --watch",
     "dev": "nodemon --exec tsx src/utils/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/utils/server.js"
   },
   "keywords": [],
   "author": "",

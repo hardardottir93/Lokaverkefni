@@ -3,11 +3,8 @@ import { cancelBookingController, createBookingController, getBookingsByUserIdCo
 import { validate, validateParams } from "../middleware/validate.js";
 import { CancelBookingParamsSchema, CreateBookingSchema } from "../schemas/bookingSchemas.js";
 import { authenticateUser } from "../middleware/authMiddleware.js";
-
 const router = express.Router();
-
 router.post("/", authenticateUser, validate(CreateBookingSchema), createBookingController);
 router.get("/my", authenticateUser, getBookingsByUserIdController);
 router.delete('/:id', authenticateUser, validateParams(CancelBookingParamsSchema), cancelBookingController);
-
 export default router;

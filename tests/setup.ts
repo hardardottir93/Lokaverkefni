@@ -1,5 +1,5 @@
 import { beforeAll } from 'vitest';
-import db from '../src/config/db';
+import db from '../src/config/db.js';
 import bcrypt from 'bcrypt';
 
 let hasRun = false;

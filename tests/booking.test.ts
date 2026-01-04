@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import request from 'supertest';
-import app from '../src/utils/app';
-import db from '../src/config/db';
+import app from '../src/utils/app.js';
+import db from '../src/config/db.js';
 
 // Mock user
 vi.mock('../src/middleware/authMiddleware', () => {

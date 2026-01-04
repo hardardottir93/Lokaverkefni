@@ -1,4 +1,4 @@
-import db from '../config/db';
+import db from '../config/db.js';
 
 export interface Event {
   id: number;

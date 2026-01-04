@@ -1,4 +1,4 @@
-import db from '../config/db';
+import db from '../config/db.js';
 
 export interface User {
     id: number;
@@ -22,6 +22,11 @@ export const findUserByEmail = async (email: string): Promise<User | null> => {
 
 export const findUserById = async (id: number): Promise<User | null> => {
   return await db.oneOrNone('SELECT * FROM users WHERE id = $1', [id]);
+};
+
+
+export const deleteUserById = async (id: number): Promise<number> => {
+  return db.result("DELETE FROM users WHERE id = $1", [id], (r) => r.rowCount);
 };
 
 export const createUser = async (user: CreateUser): Promise<User> => {

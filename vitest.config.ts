@@ -6,6 +6,10 @@ export default defineConfig({
     environment: 'node',
     setupFiles: ['./tests/setup.ts'],
     isolate: true,
+    
+    fileParallelism: false,
+    maxConcurrency: 1,
+
     sequence: {
       concurrent: false
     }

@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import { findEventById, getAllEvents, getEventsByFilter } from "../models/eventModel.js";
 
 export const getEventByIdController = async (request: Request, response: Response) => {

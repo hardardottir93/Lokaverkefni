@@ -17,14 +17,15 @@ VALUES
   ('Laugardalshöll', 'Engjavegur 8, Reykjavík', 5500),
   ('Borgarleikhúsið', 'Listabraut 3, Reykjavík', 900),
   ('Háskólabíó', 'Hagatorg, Reykjavík', 1000);
+  
 
 -- *******************************************
 -- EVENTS
 -- *******************************************
-INSERT INTO events (name, event_date, available_tickets, ticket_cost, venue_id, category_id)
+INSERT INTO events (name, description, event_date, available_tickets, ticket_cost, venue_id, category_id)
 VALUES
-  ('Sumartónleikar í Hörpu', '2026-06-15 20:00', 1800, 7500, 1, 1 ),
-  ('Klassískt kvöld', '2026-07-01 19:30', 900, 6500, 3, 1),
-  ('Úrslitaleikur bikarsins', '2025-08-10 18:00', 5500, 5500, 2, 3),
-  ('Innlit á sviðinu', '2026-09-05 20:00', 900, 7200, 3, 2),
-  ('Viðburður innan 24 klst', NOW() + INTERVAL '6 hours', 100, 5000, 1, 1);
+  ('Sumartónleikar í Hörpu', 'Stórt sumarshow með gestum.', '2026-06-15 20:00', 1800, 7500, 1, 1),
+  ('Klassískt kvöld', 'Sinfonía og einleikarar.', '2026-07-01 19:30', 900, 6500, 3, 1),
+  ('Úrslitaleikur bikarsins', 'Spennan í hámarki.', '2025-08-10 18:00', 5500, 5500, 2, 3),
+  ('Innlit á sviðinu', 'Leikhúsupplifun fyrir alla.', '2026-09-05 20:00', 900, 7200, 3, 2),
+  ('Viðburður innan 24 klst', 'Test event til að prófa 24klst reglu.', NOW() + INTERVAL '6 hours', 100, 5000, 1, 1);

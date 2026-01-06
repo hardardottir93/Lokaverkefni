@@ -4,7 +4,6 @@ export const EventFilterQuery = z
     categoryId: z.coerce.number().optional(),
     venueId: z.coerce.number().optional(),
     venueName: z.string().optional(),
-    address: z.string().optional(),
     fromDate: z
         .string()
         .refine((val) => !isNaN(Date.parse(val)), 'fromDate must be a valid date')

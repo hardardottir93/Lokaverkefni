@@ -3,6 +3,7 @@ import db from '../config/db.js';
 export interface Event {
   id: number;
   name: string;
+  description: string; 
   event_date: Date;
   venue_id: number;
   category_id: number;
@@ -15,36 +16,35 @@ export interface EventFilter {
   toDate?: string;
   venueId?: number; 
   venueName?: string;
-  address?: string;
 }
 
 export interface EventWithVenue {
   id: number;
   name: string;
+  description: string; 
   event_date: Date;
   created_at: Date;
 
-  category: string | null;
-  venue_name: string | null;
-  address: string | null;
+  category: string;
+  venue_name: string;
 }
 
 export const findEventById = async (id: number) => {
-  const query = 
-  `SELECT
+  const query = `
+    SELECT
       e.id,
       e.name,
+      e.description,
       e.event_date,
-      e.created_at,
-
       c.name AS category,
-      v.name AS venue_name,
-      TRIM(SPLIT_PART(v.address, ',', 2)) AS address
-
+      v.name AS venue,
+      e.available_tickets,
+      e.ticket_cost
     FROM events e
     LEFT JOIN categories c ON e.category_id = c.id
     LEFT JOIN venues v ON e.venue_id = v.id
-    WHERE e.id = $1`;
+    WHERE e.id = $1
+  `;
 
   return db.oneOrNone(query, [id]);
 };
@@ -65,11 +65,6 @@ export const getEventsByFilter = async (
   let joinClause = 
     `LEFT JOIN venues v
     ON e.venue_id = v.id`;
-
-  if (filters.address?.trim()) {
-    conditions.push(`TRIM(SPLIT_PART(v.address, ',', 2)) ILIKE $${index++}`);
-    values.push(`%${filters.address.trim()}%`);
-  }
 
   if (filters.venueName?.trim()) {
     joinClause = 
@@ -108,13 +103,13 @@ const query =
 `SELECT
     e.id,
     e.name,
+    e.description,
     e.event_date,
     e.created_at,
 
     c.name AS category,        
 
-    v.name AS venue_name,
-    TRIM(SPLIT_PART(v.address, ',', 2)) AS address
+    v.name AS venue_name
   FROM events e
   LEFT JOIN categories c ON e.category_id = c.id
   ${joinClause}

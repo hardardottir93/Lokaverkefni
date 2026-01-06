@@ -34,6 +34,7 @@ CREATE TABLE venues (
 CREATE TABLE events (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
+    description TEXT,
     event_date TIMESTAMPTZ NOT NULL,
     available_tickets INTEGER NOT NULL CHECK (available_tickets >= 0),
     ticket_cost INTEGER NOT NULL CHECK (ticket_cost > 0),

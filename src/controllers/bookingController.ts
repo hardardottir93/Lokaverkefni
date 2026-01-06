@@ -19,14 +19,14 @@ export const getBookingsByUserIdController = async (request: Request, response: 
     const bookings = await getBookingsByUserId(userId);
 
     const mappedBookings = (bookings ?? []).map((b) => ({
-      booking_id: b.id,
-      quantity: b.quantity,
-      total_price: b.total_price,
-      event: {
-        id: b.event_id,
-        name: b.event_name,
-        date: b.event_date,
-      },
+        booking_id: b.id,
+        quantity: b.quantity,
+        total_price: b.total_price,
+        event: {
+            id: b.event_id,
+            name: b.event_name,
+            date: b.event_date,
+        },
     }));
 
     return response.status(200).json(mappedBookings);

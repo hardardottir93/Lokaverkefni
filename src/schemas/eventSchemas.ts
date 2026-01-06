@@ -5,9 +5,8 @@ export const EventFilterQuery = z
   .object({
     categoryId: z.coerce.number().optional(),
     venueId: z.coerce.number().optional(),
-    venueName: z.string().optional(),
-    address: z.string().optional(),   
-
+    venueName: z.string().optional(),  
+    
     fromDate: z
       .string()
       .refine(

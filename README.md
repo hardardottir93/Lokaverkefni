@@ -52,7 +52,7 @@ Búðu til `.env` í rót verkefnis:
 ### 3. Setja upp gagnagrunna og gögn
 
 Notaðu `schema.sql` sem skilgreinir töflur.
-Bæta við gögnum í gagnagrunna með `schema.sql`
+Bæta við gögnum í gagnagrunna með `seed.sql`
 Gert t.d. í pgAdmin:
 
 * Opna **Query Tool**

@@ -55,6 +55,9 @@ Sýnir lista af viðburðum og tómum lista ef enginn viðburður er til staðar
 ### GET /events/:id
 Nær í stakann viðburð og skilar upplýsingum.
 
+**Params**
+- `id` 
+
 **Response**
 - `200`
 ```json
@@ -262,6 +265,9 @@ Afbókar bókun frá notanda og skilar miðum í gagnagrunn.
 
 **Skilyrði**
 - Ekki má afbóka ef minna en 24 klst eru í viðburð.
+
+**Params**
+- `id` 
 
 **Response**
 - `200`
